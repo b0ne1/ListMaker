@@ -2,6 +2,7 @@ package com.raywenderlich.listmaker.ui.main
 
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.preference.PreferenceManager
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -24,15 +25,22 @@ class MainFragment : Fragment() {
         binding = MainFragmentBinding.inflate(inflater, container, false)
 
         binding.listsRecyclerview.layoutManager = LinearLayoutManager(requireContext())
-        binding.listsRecyclerview.adapter = ListSelectionRecyclerViewAdapter()
 
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        // TODO: Use the ViewModel
+        viewModel = ViewModelProvider(requireActivity(),
+
+            MainViewModelFactory(PreferenceManager.getDefaultSharedPreferences(requireActivity())))
+            .get(MainViewModel::class.java)
+
+        var recyclerViewAdapter = ListSelectionRecyclerViewAdapter(viewModel.lists)
+        binding.listsRecyclerview.adapter = recyclerViewAdapter
+        viewModel.onListAdded = {
+            recyclerViewAdapter.listsUpdated()
+        }
     }
 
 }
