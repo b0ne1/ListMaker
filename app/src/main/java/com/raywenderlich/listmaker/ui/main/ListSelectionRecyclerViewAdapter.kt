@@ -4,10 +4,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.raywenderlich.listmaker.databinding.ListSelectionViewHolderBinding
-import com.raywenderlich.listmaker.models.TaskList
+import com.raywenderlich.listmaker.TaskList
 
-class ListSelectionRecyclerViewAdapter(private val lists : MutableList<TaskList>) : RecyclerView.Adapter<ListSelectionViewHolder>() {
+class ListSelectionRecyclerViewAdapter(val lists:
+                                       MutableList<TaskList>, val clickListener:
+                                       ListSelectionRecyclerViewClickListener) :
+    RecyclerView.Adapter<ListSelectionViewHolder>() {
 
+    interface ListSelectionRecyclerViewClickListener{
+        fun listItemClicked(list: TaskList)
+    }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListSelectionViewHolder {
         val binding = ListSelectionViewHolderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ListSelectionViewHolder(binding)
